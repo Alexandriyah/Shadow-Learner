@@ -3,7 +3,6 @@ services:
   - type: web
     name: shadow-learner-backend
     runtime: python
-    region: singapore
     plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
@@ -22,7 +21,6 @@ services:
   - type: web
     name: shadow-learner-frontend
     runtime: static
-    region: singapore
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
