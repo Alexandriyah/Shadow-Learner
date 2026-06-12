@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 set -e
 
-# Render runs the build from the 'backend' rootDir.
-# The dataset CSVs live one level up at datasets/ relative to the project root,
-# so we copy them into a local 'datasets/' folder the app can see.
-
 echo "==> Setting up datasets directory..."
 mkdir -p datasets
 
-# Copy CSVs from the project root's datasets folder (mounted at /opt/render/project/src/datasets)
-DATASETS_SRC="/opt/render/project/src/datasets"
-if [ -d "$DATASETS_SRC" ]; then
+# Try Render's absolute path first, then fall back to relative path (Railway / local)
+if [ -d "/opt/render/project/src/datasets" ]; then
+    DATASETS_SRC="/opt/render/project/src/datasets"
+elif [ -d "../datasets" ]; then
+    DATASETS_SRC="../datasets"
+else
+    DATASETS_SRC=""
+fi
+
+if [ -n "$DATASETS_SRC" ]; then
     cp -n "$DATASETS_SRC/topics.csv"   datasets/ 2>/dev/null || true
     cp -n "$DATASETS_SRC/quizzes.csv"  datasets/ 2>/dev/null || true
-    echo "==> Datasets copied successfully."
+    echo "==> Datasets copied from $DATASETS_SRC"
 else
-    echo "==> WARNING: datasets source directory not found at $DATASETS_SRC"
+    echo "==> WARNING: No datasets source directory found. Skipping CSV copy."
 fi
 
 echo "==> Starting uvicorn..."

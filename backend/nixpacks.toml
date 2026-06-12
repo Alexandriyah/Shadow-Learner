@@ -1,0 +1,9 @@
+# nixpacks.toml — Railway build config for FastAPI backend
+[phases.setup]
+nixPkgs = ["python311", "bash"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "bash start.sh"
